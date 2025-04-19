@@ -36,5 +36,7 @@ I've decided to use it myself to make a game and will be updating it as I build 
 ## Tips
 
 > For a more detailed example, check the examples directory.
+
 > Though I've tweaked the default settings to work for me, it does not mean they will work well for your scene, so you may need to play around with them to see what fits.
+
 > This shader works best with high roughness materials and simple or no textures, as demonstrated in examples/shapes.rs
