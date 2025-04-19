@@ -27,6 +27,9 @@ I've decided to use it myself to make a game and will be updating it as I build 
             Camera3d::default(),
             SimpletoonSettings::default(),  // These settings can be updated any time to change the shader's effect
             Msaa::Off,
+            // Depth and normal prepass and both currently required by the shader.
+            DepthPrepass,
+            NormalPrepass,
             //Fxaa::default()   // Fxaa is not required, though the shader comes with no built-in anti-aliasing.
         ));
     }
