@@ -2,6 +2,12 @@
 name = "bevy_simpletoon"
 version = "0.1.0"
 edition = "2024"
+categories = ["game-development"]
+keywords = ["bevy", "bevy_toon", "bevy_shader"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Pybounce/bevy_simpletoon"
+publish = true
+description = "A super simple post processing toon shader"
 
 [dependencies]
 bevy = "0.15.3"
