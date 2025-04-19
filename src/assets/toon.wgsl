@@ -158,7 +158,7 @@ fn outline_at_scale(scale: f32, uv: vec2f) -> f32 {
 
     let edge_depth_0 = depth_buffer_edge_depth(normal_threshold, bl_uv, tr_uv, br_uv, tl_uv);
     let edge_depth_1 = normal_buffer_edge_depth(bl_uv, tr_uv, br_uv, tl_uv);
-    let colour_depth = 0.0;//detect_edge_colour(bl_uv, tr_uv, br_uv, tl_uv);
+    let colour_depth = detect_edge_colour(bl_uv, tr_uv, br_uv, tl_uv);
     let edge_depth = max(colour_depth, max(edge_depth_0, edge_depth_1));
     
     if edge_depth > 0.5 {
