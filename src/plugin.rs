@@ -21,17 +21,17 @@ use bevy::{
 };
 
 
-pub struct PostProcessPlugin;
+pub struct SimpletoonPlugin;
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, RenderLabel)]
-pub struct PostProcessLabel;
+pub struct SimpletoonPostProcessLabel;
 
 #[derive(Default)]
-struct PostProcessNode;
+struct SimpletoonPostProcessNode;
 
 #[derive(Component, Clone, Copy, ExtractComponent, ShaderType)]
 #[require(DepthPrepass, NormalPrepass)]
-pub struct ToonPostProcessSettings {
+pub struct SimpletoonSettings {
     pub depth_threshold: f32,
     pub depth_threshold_depth_mul: f32,  // If something is further away, it should require more depth
     pub depth_normal_threshold: f32, // If at a glazing angle, depth threshold should be harsher
@@ -48,12 +48,12 @@ struct PostProcessPipeline {
     pipeline_id: CachedRenderPipelineId,
 }
 
-impl Plugin for PostProcessPlugin {
+impl Plugin for SimpletoonPlugin {
     fn build(&self, app: &mut App) {
         embedded_asset!(app, "assets/toon.wgsl");
         app.add_plugins((
-            ExtractComponentPlugin::<ToonPostProcessSettings>::default(),
-            UniformComponentPlugin::<ToonPostProcessSettings>::default(),
+            ExtractComponentPlugin::<SimpletoonSettings>::default(),
+            UniformComponentPlugin::<SimpletoonSettings>::default(),
         ));
 
         let Some(render_app) = app.get_sub_app_mut(RenderApp) else {
@@ -61,15 +61,15 @@ impl Plugin for PostProcessPlugin {
         };
 
         render_app
-            .add_render_graph_node::<ViewNodeRunner<PostProcessNode>>(
+            .add_render_graph_node::<ViewNodeRunner<SimpletoonPostProcessNode>>(
                 Core3d,
-                PostProcessLabel,
+                SimpletoonPostProcessLabel,
             )
             .add_render_graph_edges(
                 Core3d,
                 (
                     Node3d::Tonemapping,
-                    PostProcessLabel,
+                    SimpletoonPostProcessLabel,
                     Node3d::Fxaa,
                     Node3d::EndMainPassPostProcessing,
                 ),
@@ -86,7 +86,7 @@ impl Plugin for PostProcessPlugin {
     }
 }
 
-impl ViewNode for PostProcessNode {
+impl ViewNode for SimpletoonPostProcessNode {
     // The node needs a query to gather data from the ECS in order to do its rendering,
     // but it's not a normal system so we need to define it manually.
     //
@@ -95,10 +95,10 @@ impl ViewNode for PostProcessNode {
         &'static ViewTarget,
         &'static ViewPrepassTextures,
         // This makes sure the node only runs on cameras with the PostProcessSettings component
-        &'static ToonPostProcessSettings,
+        &'static SimpletoonSettings,
         // As there could be multiple post processing components sent to the GPU (one per camera),
         // we need to get the index of the one that is associated with the current view.
-        &'static DynamicUniformIndex<ToonPostProcessSettings>,
+        &'static DynamicUniformIndex<SimpletoonSettings>,
         &'static ViewUniformOffset,
     );
 
@@ -119,7 +119,7 @@ impl ViewNode for PostProcessNode {
             return Ok(());
         };
 
-        let settings_uniforms = world.resource::<ComponentUniforms<ToonPostProcessSettings>>();
+        let settings_uniforms = world.resource::<ComponentUniforms<SimpletoonSettings>>();
         let view_uniforms = world.resource::<ViewUniforms>();
         let Some(view_uniforms) = view_uniforms.uniforms.binding() else {
             return Ok(());
@@ -181,7 +181,7 @@ impl FromWorld for PostProcessPipeline {
                 (
                     texture_2d(TextureSampleType::Float { filterable: true }),
                     sampler(SamplerBindingType::Filtering),
-                    uniform_buffer::<ToonPostProcessSettings>(true),
+                    uniform_buffer::<SimpletoonSettings>(true),
                     texture_depth_2d(),
                     texture_2d(TextureSampleType::Float { filterable: true }),
                     uniform_buffer::<ViewUniform>(true),
@@ -224,12 +224,12 @@ impl FromWorld for PostProcessPipeline {
     }
 }
 
-impl Default for ToonPostProcessSettings {
+impl Default for SimpletoonSettings {
     fn default() -> Self {
         Self { 
             depth_threshold: 1.0, 
             depth_threshold_depth_mul: 1.0, 
-            depth_normal_threshold: 0.5, 
+            depth_normal_threshold: 0.4, 
             depth_normal_threshold_mul: 30.0, 
             normal_threshold: 0.4, 
             colour_threshold: 0.2, 

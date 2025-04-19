@@ -102,14 +102,14 @@ fn detect_edge_colour(bl_uv: vec2f, tr_uv: vec2f, br_uv: vec2f, tl_uv: vec2f) ->
 
 
 fn toon_colour(uv: vec2f) -> vec4f {
+
     let c = textureSample(screen_texture, texture_sampler, uv).rgb;
     let i = length(c);
-    let new_i = floor(i * 9.5) / 9.5;
+    let new_i = floor(i * 5.0) / 5.0;
     let new_c = normalize(c) * new_i;
+
     return vec4<f32>(
-        new_c.r,
-        new_c.g,
-        new_c.b,
+        new_c,
         1.0
     );
 }
@@ -189,7 +189,7 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     var o1 = outline_at_scale(1.0, in.uv) * o1mix;
     var o2 = outline_at_scale(2.0, in.uv) * o2mix;
     var o3 = outline_at_scale(3.0, in.uv) * o3mix;
-    var o = max(o1, max(o2, o3));
+    var o = outline_at_scale(1.0, in.uv);//max(o1, max(o2, o3));
 
     var c = mix(toon_colour(in.uv), vec4f(0.01, 0.01, 0.01, 1.0), o);
     //0.8752 -> 0.87515 == 1.0 -> 0.0
@@ -204,5 +204,6 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     //else if d > 0.0008 {
     //    c = vec4f(0.0, 0.0, 1.0, 1.0);
     //}
+
     return vec4f(c);
 }
