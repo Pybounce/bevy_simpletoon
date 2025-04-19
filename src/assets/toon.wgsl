@@ -18,7 +18,7 @@ struct ToonPostProcessSettings {
     normal_threshold: f32,
     colour_threshold: f32,
     sampling_scale: f32,
-
+    colour_banding: f32
 }
 @group(0) @binding(2) var<uniform> settings: ToonPostProcessSettings;
 @group(0) @binding(3) var depth_prepass_texture: texture_depth_2d;
@@ -105,7 +105,7 @@ fn toon_colour(uv: vec2f) -> vec4f {
 
     let c = textureSample(screen_texture, texture_sampler, uv).rgb;
     let i = length(c);
-    let new_i = floor(i * 5.0) / 5.0;
+    let new_i = floor(i * settings.colour_banding) / settings.colour_banding;
     let new_c = normalize(c) * new_i;
 
     return vec4<f32>(

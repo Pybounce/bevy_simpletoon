@@ -39,6 +39,7 @@ pub struct SimpletoonSettings {
     pub normal_threshold: f32,
     pub colour_threshold: f32,
     pub sampling_scale: f32,
+    pub colour_banding: f32
 }
 
 #[derive(Resource)]
@@ -233,7 +234,8 @@ impl Default for SimpletoonSettings {
             depth_normal_threshold_mul: 30.0, 
             normal_threshold: 0.4, 
             colour_threshold: 0.2, 
-            sampling_scale: 3.0 
+            sampling_scale: 3.0,
+            colour_banding: 5.0 
         }
     }
 }
