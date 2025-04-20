@@ -17,8 +17,9 @@ struct ToonPostProcessSettings {
     depth_normal_threshold_mul: f32, // If at a glazing angle, depth threshold should be harsher
     normal_threshold: f32,
     colour_threshold: f32,
-    sampling_scale: f32,
-    colour_banding: f32
+    stroke_size: f32,
+    colour_banding: f32,
+    stroke_colour: vec4f
 }
 @group(0) @binding(2) var<uniform> settings: ToonPostProcessSettings;
 @group(0) @binding(3) var depth_prepass_texture: texture_depth_2d;
@@ -118,7 +119,7 @@ fn get_sampling_scale(pos: vec2f) -> f32 {
     let d = 1.0 - (prepass_depth(pos) * 700.0);
     //if depth > 0.999 { return 1.0; }
     //if depth > 0.998 { return 2.0; }
-    return mix(settings.sampling_scale, settings.sampling_scale, saturate(d));
+    return mix(settings.stroke_size, settings.stroke_size, saturate(d));
     //return 0.1;
 }
 
@@ -189,9 +190,9 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     var o1 = outline_at_scale(1.0, in.uv) * o1mix;
     var o2 = outline_at_scale(2.0, in.uv) * o2mix;
     var o3 = outline_at_scale(3.0, in.uv) * o3mix;
-    var o = outline_at_scale(1.0, in.uv);//max(o1, max(o2, o3));
+    var o = outline_at_scale(settings.stroke_size, in.uv);//max(o1, max(o2, o3));
 
-    var c = mix(toon_colour(in.uv), vec4f(0.01, 0.01, 0.01, 1.0), o);
+    var c = mix(toon_colour(in.uv), settings.stroke_colour, o);
     //0.8752 -> 0.87515 == 1.0 -> 0.0
     //0.00005 -> 0.0
     //1.0 -> 0.0

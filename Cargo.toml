@@ -1,6 +1,6 @@
 [package]
 name = "bevy_simpletoon"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2024"
 categories = ["game-development"]
 keywords = ["bevy", "bevy_toon", "bevy_shader"]

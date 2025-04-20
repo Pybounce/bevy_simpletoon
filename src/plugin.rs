@@ -38,8 +38,9 @@ pub struct SimpletoonSettings {
     pub depth_normal_threshold_mul: f32, // If at a glazing angle, depth threshold should be harsher
     pub normal_threshold: f32,
     pub colour_threshold: f32,
-    pub sampling_scale: f32,
-    pub colour_banding: f32
+    pub stroke_size: f32,
+    pub colour_banding: f32,
+    pub stroke_colour: Vec4
 }
 
 #[derive(Resource)]
@@ -234,8 +235,9 @@ impl Default for SimpletoonSettings {
             depth_normal_threshold_mul: 30.0, 
             normal_threshold: 0.4, 
             colour_threshold: 0.2, 
-            sampling_scale: 3.0,
-            colour_banding: 5.0 
+            stroke_size: 1.0,
+            colour_banding: 5.0, 
+            stroke_colour: Vec4::new(0.1, 0.1, 0.1, 1.0) 
         }
     }
 }
