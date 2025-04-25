@@ -1,6 +1,6 @@
 [package]
 name = "bevy_simpletoon"
-version = "0.1.4"
+version = "0.2.0"
 edition = "2024"
 categories = ["game-development"]
 keywords = ["bevy", "bevy_toon", "bevy_shader"]
@@ -10,4 +10,4 @@ publish = true
 description = "A super simple post processing toon shader"
 
 [dependencies]
-bevy = "0.15.3"
+bevy = "0.16.0"

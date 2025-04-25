@@ -134,6 +134,7 @@ fn setup(
     commands.insert_resource(AmbientLight {
         color: Color::WHITE,
         brightness: 2000.0,
+        affects_lightmapped_meshes: false,
     });
  
     // ground plane
@@ -164,8 +165,8 @@ fn rotate(mut query: Query<&mut Transform, With<Shape>>, time: Res<Time>) {
 pub fn move_camera(
     mut camera_query: Query<(&mut Transform, &CameraController)>,
     mut mouse_motion_events: EventReader<MouseMotion>
-) {
-    let (mut ct, cam_con) = camera_query.single_mut();
+) -> Result {
+    let (mut ct, cam_con) = camera_query.single_mut()?;
 
 
     for event in mouse_motion_events.read() {
@@ -178,6 +179,7 @@ pub fn move_camera(
     }
     ct.translation = Vec3::ZERO - ct.forward() * cam_con.distance;
 
+    return Ok(());
 }
 pub fn zoom_camera(
     mut mouse_wheel_events: EventReader<MouseWheel>,
