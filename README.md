@@ -36,6 +36,13 @@ I've decided to use it myself to make a game and will be updating it as I build 
 
 ```
 
+## Compatibility
+
+| Bevy version | `bevy_simpletoon` version |
+| :----------- | :------------------------ |
+| `0.16`       | `0.2`                     |
+| `0.15`       | `0.1`                     |
+
 ## Tips
 
 > For a more detailed example, check the examples directory.
